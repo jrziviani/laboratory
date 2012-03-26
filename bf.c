@@ -50,7 +50,7 @@ int increment( int *ptr, char operator )
 
     // we cannot increment if we are on the maximum already
     // TODO: runtime error log
-    if ( *ptr >= UCHAR_MAX )
+    if ( *ptr == INT_MAX )
         return -1;
 
     // increment the value
@@ -66,7 +66,7 @@ int decrement( int *ptr, char operator )
 
     // we cannot decrement if we are on the minimum already
     // TODO: runtime error log
-    if ( *ptr <= 0 )
+    if ( *ptr == INT_MIN )
         return -1;
 
     // decrement the value
