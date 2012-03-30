@@ -1,32 +1,47 @@
-Brainf*ck Interpreter in C
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+** Brainf*ck Interpreter in C                                              **
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-bf.c is a basic (and incomplete) Brainf*ck language interpreter written in C
+bf.c is a basic (and now working :D ) Brainf*ck language interpreter 
+written in C language
 
 There are some bf source codes I use to test successfully
 
 $ gcc bf.c -o bf
-$ ./bf toc.bf
-include <unistd.h>
-char r[65536],*e=r;
-main(){
 
 $ ./bf beer.bf
 ...
-7 Bottles of beer on the wall
-
+38 Bottles of beer on the wall
+38 Bottles of beer
 Take one down and pass it around
+37 Bottles of beer on the wall
 
-6 Bottles of beer on the wall
-
+37 Bottles of beer on the wall
+37 Bottles of beer
 Take one down and pass it around
+36 Bottles of beer on the wall
 
-5 Bottles of beer on the wall
+36 Bottles of beer on the wall
+36 Bottles of beer
+Take one down and pass it around
+35 Bottles of beer on the wall
 ...
 
-$ ./bf helloworld.bf
+$ ./bf toc.bf                                                                                                                                                                                       23:45
+#include <unistd.h>
+char r[65536],*e=r;
+main(){
+
+$ ./bf cripto.bf                                                                                                                                                                                    23:46
+Ziviani
+Mvivnav
+
+$ ./bf helloworld.bf                                                                                                                                                                                23:46
 Hello World!
 
-Solving a SUDOKU game using backtracking algorithm
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+** Solving a SUDOKU game using backtracking algorithm                      **
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 $ ./sudoku
 SUDOKU GAME:
