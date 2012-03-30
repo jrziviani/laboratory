@@ -27,16 +27,16 @@ Take one down and pass it around
 35 Bottles of beer on the wall
 ...
 
-$ ./bf toc.bf                                                                                                                                                                                       23:45
+$ ./bf toc.bf
 #include <unistd.h>
 char r[65536],*e=r;
 main(){
 
-$ ./bf cripto.bf                                                                                                                                                                                    23:46
+$ ./bf cripto.bf
 Ziviani
 Mvivnav
 
-$ ./bf helloworld.bf                                                                                                                                                                                23:46
+$ ./bf helloworld.bf
 Hello World!
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
