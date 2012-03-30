@@ -1,6 +1,7 @@
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ** Brainf*ck Interpreter in C                                              **
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+brainfck/
 
 bf.c is a basic (and now working :D ) Brainf*ck language interpreter 
 written in C language
@@ -42,6 +43,7 @@ Hello World!
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ** Solving a SUDOKU game using backtracking algorithm                      **
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+sudoku/
 
 $ ./sudoku
 SUDOKU GAME:
