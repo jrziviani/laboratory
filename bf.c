@@ -1,116 +1,130 @@
 #include <stdio.h>
 #include <limits.h>
 
-#define PSIZE 30000
-int stack[ PSIZE ];
-int *sp = stack;
+#include "bf.h"
 
-int increment_ptr( int **ptr, int *c, char operator )
+static int push( stack *st, char operator )
 {
     if ( operator != '>' )
         return 0;
 
-    // check if we will not overflow our stack
-    // TODO: runtime error log
-    if ( *c >= PSIZE )
+    // stack pointer is on the limit
+    if ( st->sp >= PSIZE ) {
+
+        fprintf( stderr, "Error: This code overflows the "
+                         "the stack and cannot continue\n");
         return -1;
+    }
 
     // increment the stack pointer
-    ++*ptr;
+    ++st->sp;
 
-    // increment the counter
-    ++*c;
-    
     return 0;
 }
 
-int decrement_ptr( int **ptr, int *c, char operator )
+static int pop( stack *st, char operator )
 {
     if ( operator != '<' )
         return 0;
 
-    // check if we will not underflow our stack
-    // TODO: runtime error log
-    if ( c <= 0 )
+    // stack pointer is on the limit
+    if ( st->sp == 0 ) {
+
+        fprintf( stderr, "Error: This code underflows the "
+                         "stack and cannot continue\n");
+
         return -1;
+    }
 
     // decrement the stack pointer
-    --*ptr;
-
-    // decrement the counter
-    --*c;
+    --st->sp;
 
     return 0;
 }
 
-int increment( int *ptr, char operator )
+static int increment( stack *st, char operator )
 {
     if ( operator != '+' )
         return 0;
 
-    // we cannot increment if we are on the maximum already
-    // TODO: runtime error log
-    if ( *ptr == INT_MAX )
+    // cannot increment over UCHAR_MAX
+    // ** This check cannot be done because some brainf*ck programs take
+    // advantage of this jump from UCHAR_MAX -> 0
+    /*
+    if ( st->program[ st->sp ] == UCHAR_MAX ) {
+
+        fprintf( stderr, "Error: The value cannot be higher than "
+                          "%d\n", UCHAR_MAX);
         return -1;
+    }
+    */
 
     // increment the value
-    ++*ptr;
+    ++st->program[ st->sp ];
 
     return 0;
 }
 
-int decrement( int *ptr, char operator )
+static int decrement( stack *st, char operator )
 {
     if ( operator != '-' )
         return 0;
 
-    // we cannot decrement if we are on the minimum already
-    // TODO: runtime error log
-    if ( *ptr == INT_MIN )
+    // cannot decrement under 0
+    // ** This check cannot be done because some brainf*ck programs take
+    // advantage of this jump from 0 -> UCHAR_MAX
+    /*
+    if ( st->program[ st->sp ] == 0 ) {
+
+        fprintf( stderr, "Error: The value cannot be lower than "
+                         "%d\n", 0);
         return -1;
+    }
+    */
 
     // decrement the value
-    --*ptr;
+    --st->program[ st->sp ];
+
     return 0;
 }
 
-int print_char( int *ptr, char operator )
+static int print_char( stack *st, char operator )
 {
     if ( operator != '.' )
         return -1;
 
-    // print the value pointed by the stack pointer
-    putchar( *ptr );
-//    printf("%d, ", *ptr);
+    // print the value from the stack
+    putchar( st->program[ st->sp ] );
 
     return 0;
 }
 
-int get_char( int *ptr, char operator )
+static int get_char( stack *st, char operator )
 {
     if ( operator != ',' )
         return 0;
 
-    // put a char from the stdin in a room pointed 
-    // by the stack pointer
-    *ptr = getchar();
+    // put a char from stdin into the stack
+    st->program[ st->sp ] = getchar();
 
     return 0;
 }
 
-int execute( char *buffer, int *c );
-int loop( int *ptr, char **buffer, int *c )
+static int loop( stack *st, char **buffer )
 {
     if ( **buffer != '[' )
         return 0;
 
-    int tmp = *ptr;
-
+    // step the initial bracket '['
     ++*buffer;
-    
-    while ( tmp > 0 )
-        tmp = execute ( *buffer, c );
 
+    while ( st->program[ st->sp ] ) {
+
+        execute ( st, *buffer );
+    }
+
+    // the whole loop scope "[...[..]..[.]]" has been processed, 
+    // it is time now to take the program to the closing bracket
     int in = 0;
     while ( **buffer ) {
 
@@ -127,24 +141,20 @@ int loop( int *ptr, char **buffer, int *c )
     return 0;
 }
 
-int execute( char *buffer, int *c )
+static int execute( stack *st, char *buffer )
 {
     do {
-
         // exit loop conditions
-        if ( *buffer == ']' )
-            return *sp;
+        if ( *buffer == ']' || *buffer == 0 )
+            return 0;
 
-        if ( *buffer == 0 )
-            return -1;
-
-        increment_ptr( &sp, c, *buffer );
-        decrement_ptr( &sp, c, *buffer );
-        increment    ( sp, *buffer );
-        decrement    ( sp, *buffer );
-        print_char   ( sp, *buffer );
-        get_char     ( sp, *buffer ); 
-        loop         ( sp, &buffer, c );
+        push       ( st, *buffer );
+        pop        ( st, *buffer );
+        increment  ( st, *buffer );
+        decrement  ( st, *buffer );
+        print_char ( st, *buffer );
+        get_char   ( st, *buffer ); 
+        loop       ( st, &buffer );
 
     } while ( ++buffer );
 
@@ -153,19 +163,24 @@ int execute( char *buffer, int *c )
 
 int main(int argc, char *argv[])
 {
-    int c = 0;
     long file_size = 0;
     char buffer[ PSIZE ];
 
+    stack bfprogram;
+
     // source file must be passed by parameter
-    // TODO: runtime error log
-    if (argc != 2)
+    if (argc != 2) {
+        
+        fprintf( stderr, "\nusage: ./bf source.bf\n" );
         return 1;
+    }
 
     FILE *source;
-    // TODO: runtime error log
-    if (( source = fopen( argv[1], "rb" )) == NULL )
+    if (( source = fopen( argv[1], "rb" )) == NULL ) {
+
+        fprintf( stderr, "Error: Source file cannot be read\n" );
         return 2;
+    }
 
     // get the source file size
     fseek( source, 0 ,SEEK_END );
@@ -174,13 +189,17 @@ int main(int argc, char *argv[])
 
     // the source file content will be stored in a PSIZE buffer
     // so it is safer to check its size
-    // TODO: runtime error log
-    if ( file_size > PSIZE )
+    if ( file_size > PSIZE ) {
+
+        fprintf( stderr, "Error: This program can interpret program\n "
+                         "with less the 30,000 instructions so far\n" );
         return 3;
+    }
 
     // put the source file contents in the buffer
-    // TODO: runtime error log
     if ( fread( buffer, 1, file_size, source ) != file_size ) {
+
+        fprintf( stderr, "Error: Internal error\n" );
         fclose( source );
         return 4;
     }
@@ -190,7 +209,7 @@ int main(int argc, char *argv[])
     buffer[file_size] = 0;
 
     // interpret the program
-    execute( buffer, &c );
+    execute( &bfprogram, buffer );
 
     return 0;
 }
