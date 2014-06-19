@@ -1,0 +1,93 @@
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+** Brainf*ck Interpreter in C                                              **
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+brainfck/
+
+bf.c is a basic (and now working :D ) Brainf*ck language interpreter 
+written in C language
+
+There are some bf source codes I use to test successfully
+
+$ gcc bf.c -o bf
+
+$ ./bf beer.bf
+...
+38 Bottles of beer on the wall
+38 Bottles of beer
+Take one down and pass it around
+37 Bottles of beer on the wall
+
+37 Bottles of beer on the wall
+37 Bottles of beer
+Take one down and pass it around
+36 Bottles of beer on the wall
+
+36 Bottles of beer on the wall
+36 Bottles of beer
+Take one down and pass it around
+35 Bottles of beer on the wall
+...
+
+$ ./bf toc.bf
+#include <unistd.h>
+char r[65536],*e=r;
+main(){
+
+$ ./bf cripto.bf
+Ziviani
+Mvivnav
+
+$ ./bf helloworld.bf
+Hello World!
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+** Solving a SUDOKU game using backtracking algorithm                      **
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+sudoku/
+
+$ ./sudoku
+SUDOKU GAME:
++-------+-------+-------+
+| 9 4   | 1   2 |   5 8 |
+| 6     |   5   |     4 |
+|     2 | 4   3 | 1     |
++-------+-------+-------+
+|   2   |       |   6   |
+| 5   8 |   2   | 4   1 |
+|   6   |       |   8   |
++-------+-------+-------+
+|     1 | 6   8 | 7     |
+| 7     |   4   |     3 |
+| 4 3   | 5   9 |   1 2 |
++-------+-------+-------+
+GAME SOLVED:
++-------+-------+-------+
+| 9 4 7 | 1 6 2 | 3 5 8 |
+| 6 1 3 | 8 5 7 | 9 2 4 |
+| 8 5 2 | 4 9 3 | 1 7 6 |
++-------+-------+-------+
+| 1 2 9 | 3 8 4 | 5 6 7 |
+| 5 7 8 | 9 2 6 | 4 3 1 |
+| 3 6 4 | 7 1 5 | 2 8 9 |
++-------+-------+-------+
+| 2 9 1 | 6 3 8 | 7 4 5 |
+| 7 8 5 | 2 4 1 | 6 9 3 |
+| 4 3 6 | 5 7 9 | 8 1 2 |
++-------+-------+-------+
+
+$ ./sudoku
+SUDOKU GAME:
++-------+-------+-------+
+| 9 4   | 1   2 |   5 8 |
+| 6     |   5   |     4 |
+|     2 | 4   3 | 1     |
++-------+-------+-------+
+|   2   |       |   6   |
+| 5   8 |   2   | 4   1 |
+|   6   |       |   8 5 |
++-------+-------+-------+
+|     1 | 6   8 | 7     |
+| 7     |   4   |     3 |
+| 4 3   | 5   9 |   1 2 |
++-------+-------+-------+
+GAME IMPOSSIBLE TO SOLVE
